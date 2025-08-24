@@ -1,5 +1,16 @@
 <script setup>
+import { ref } from 'vue';
+import OrderForm from './OrderForm.vue';
+
 const props = defineProps(["product"]);
+
+const isShowOrderForm = ref(false);
+
+function toogleShowOrderForm(){
+  isShowOrderForm.value = !isShowOrderForm.value
+}
+
+
 </script>
 
 <template>
@@ -20,10 +31,11 @@ const props = defineProps(["product"]);
         <div class="product-rating">
           ⭐ {{ props.product.rating.rate }} ({{ props.product.rating.count }})
         </div>
-        <button class="buy-btn">Купить</button>
+        <button class="buy-btn" @click="toogleShowOrderForm">Купить</button>
       </div>
     </div>
   </div>
+  <OrderForm v-if="isShowOrderForm" @close="toogleShowOrderForm" :product="props.product"/>
 </template>
 
 <style scoped>
