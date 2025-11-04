@@ -6,9 +6,9 @@ const props = defineProps(["products"]);
 <template>
   <div class="product-list">
     <ProductCard
-      v-for="product in props.products"
-      :key="product.id"
-      :product="product"
+        v-for="product in props.products"
+        :key="product.id"
+        :product="product"
     />
   </div>
 </template>

@@ -1,3 +1,20 @@
+<script setup>
+import { ref } from 'vue';
+
+const props = defineProps(["maxPrice"]);
+const emits = defineEmits(['search-product-by-price']);
+
+const from = ref(0);
+const to = ref();
+
+function searchHandler() {
+  emits('search-product-by-price', {
+    from: from.value ?? 0,
+    to: to.value ? to.value : props.maxPrice
+  });
+}
+</script>
+
 <template>
   <div class="search price-search">
   <h3>Поиск по цене</h3>
@@ -14,23 +31,6 @@
 </div>
 </div>
 </template>
-
-<script setup>
-import { ref } from 'vue';
-
-const props = defineProps(["maxPrice"]);
-const emits = defineEmits(['search-product-by-price']);
-
-const from = ref(0);
-const to = ref();
-
-function searchHandler() {
-  emit('search-product-by-price', {
-    from: from.value ?? 0,
-    to: to.value ?? props.maxPrice
-  });
-}
-</script>
 
 <style scoped lang="scss">
 .price-search {

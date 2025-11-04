@@ -1,16 +1,18 @@
 <script setup>
-import { defineProps, defineEmits } from "vue";
-import { Field, Form, ErrorMessage } from "vee-validate";
-import * as yup from "yup";
+import { Field, Form, ErrorMessage } from "vee-validate"
+import * as yup from "yup"
 
-const props = defineProps({ product: Object });
-const emit = defineEmits(["close"]);
+const props = defineProps({
+  product: Object
+})
+
+const emit = defineEmits(["close"])
 
 const countries = [
   { value: "ru", text: "Россия" },
   { value: "by", text: "Белорусь" },
-  { value: "kz", text: "Казахстан" },
-];
+  { value: "kz", text: "Казахстан" }
+]
 
 const formSchema = yup.object({
   userName: yup.string().required("Это поле обязательно"),
@@ -20,11 +22,11 @@ const formSchema = yup.object({
     .required("Это поле обязательно"),
   selectedCountry: yup.string().required("Выберите страну"),
   userAddress: yup.string().required("Это поле обязательно"),
-  agreed: yup.boolean().oneOf([true], "Вы должны согласиться с условиями"),
-});
+  agreed: yup.boolean().oneOf([true], "Вы должны согласиться с условиями")
+})
 
 function closeModal() {
-  emit("close");
+  emit("close")
 }
 
 async function onSubmit(values) {
@@ -34,25 +36,25 @@ async function onSubmit(values) {
     email: values.userEmail,
     country: values.selectedCountry,
     address: values.userAddress,
-    agreed: values.agreed,
-  };
+    agreed: values.agreed
+  }
 
   try {
     const response = await fetch("https://httpbin.org/post", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(orderData),
-    });
-    if (!response.ok) throw new Error("Ошибка при отправке");
+      body: JSON.stringify(orderData)
+    })
+    if (!response.ok) throw new Error("Ошибка при отправке")
 
-    const result = await response.json();
-    console.log("Ответ от сервера:", result);
+    const result = await response.json()
+    console.log("Ответ от сервера:", result)
 
-    alert("Заказ оформлен успешно!");
-    closeModal();
+    alert("Заказ оформлен успешно!")
+    closeModal()
   } catch (err) {
-    console.error(err);
-    alert("Произошла ошибка при оформлении заказа");
+    console.error(err)
+    alert("Произошла ошибка при оформлении заказа")
   }
 }
 </script>
@@ -63,7 +65,7 @@ async function onSubmit(values) {
       <div class="order-form-wrapper">
         <Form :validation-schema="formSchema" @submit="onSubmit">
           <button class="close-btn" @click="closeModal">✕</button>
-          <h3>Оформить заказ на {{ props.product.title }}</h3>
+          <h3>Оформить заказ на {{ product.title }}</h3>
 
           <div class="form-group">
             <label>ФИО</label>
@@ -84,7 +86,7 @@ async function onSubmit(values) {
           <div class="form-group">
             <label>Страна</label>
             <Field name="selectedCountry" as="select">
-              <option value="" disabled>Выберете страну</option>
+              <option value="" disabled>Выберите страну</option>
               <option
                 v-for="country in countries"
                 :key="country.value"
@@ -105,17 +107,10 @@ async function onSubmit(values) {
           </div>
 
           <div class="form-group checkbox-group">
-            <Field
-              name="agreed"
-              type="checkbox"
-              :value="true"
-              v-slot="{ field }"
-            >
+            <Field name="agreed" type="checkbox" :value="true" v-slot="{ field }">
               <input type="checkbox" v-bind="field" id="agreement" />
             </Field>
-            <label for="agreement"
-              >Я даю согласие на обработку персональных данных</label
-            >
+            <label for="agreement">Я даю согласие на обработку персональных данных</label>
             <ErrorMessage name="agreed" />
           </div>
 
