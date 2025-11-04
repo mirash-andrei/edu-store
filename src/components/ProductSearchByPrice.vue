@@ -25,9 +25,9 @@ const from = ref(0);
 const to = ref();
 
 function searchHandler() {
-  emit('search-product-by-price', {
+  emits('search-product-by-price', {
     from: from.value ?? 0,
-    to: to.value ?? props.maxPrice
+    to: to.value ? to.value : props.maxPrice
   });
 }
 </script>

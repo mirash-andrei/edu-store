@@ -1,11 +1,11 @@
 <script setup>
 import { ref } from 'vue';
 
-const emits = defineEmits();
+const emits = defineEmits(['search-product']);
 
-const searchQuery = ref();
+const searchQuery = ref('');
 
-function searchHandler(){
+function searchHandler() {
     emits('search-product', searchQuery.value)
 }
 </script>

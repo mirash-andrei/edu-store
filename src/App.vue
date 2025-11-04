@@ -6,7 +6,7 @@ import ProductSearch from "./components/ProductSearch.vue";
 import ProductSearchByPrice from "./components/ProductSearchByPrice.vue";
 import ProductAdd from "./components/ProductAdd.vue";
 
-const products = ref();
+const products = ref([]);
 
 axios
   .get("https://fakestoreapi.com/products")
@@ -34,7 +34,7 @@ const searchProducts = computed(() => {
 
   if (searchQuery.value) {
     productsList = productsList.filter((product) =>
-      product.title.includes(searchQuery.value)
+      product.title.toLowerCase().includes(searchQuery.value.toLowerCase())
     );
   }
 
@@ -100,8 +100,5 @@ function addNewProduct(newProduct){
   margin-bottom: 16px;
   cursor: pointer;
   transition: background 0.3s;
-}
-.bproduct-add-btn:hover {
-  background: #0056b3;
 }
 </style>

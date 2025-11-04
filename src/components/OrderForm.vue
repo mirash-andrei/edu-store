@@ -1,5 +1,4 @@
 <script setup>
-import { defineProps, defineEmits } from "vue";
 import { Field, Form, ErrorMessage } from "vee-validate";
 import * as yup from "yup";
 
@@ -63,8 +62,7 @@ async function onSubmit(values) {
       <div class="order-form-wrapper">
         <Form :validation-schema="formSchema" @submit="onSubmit">
           <button class="close-btn" @click="closeModal">✕</button>
-          <h3>Оформить заказ на {{ props.product.title }}</h3>
-
+          <h3>Оформить заказ на {{ product.title }}</h3>
           <div class="form-group">
             <label>ФИО</label>
             <Field name="userName" v-slot="{ field }">
@@ -72,7 +70,6 @@ async function onSubmit(values) {
             </Field>
             <ErrorMessage name="userName" />
           </div>
-
           <div class="form-group">
             <label>Email</label>
             <Field name="userEmail" v-slot="{ field }">
@@ -80,7 +77,6 @@ async function onSubmit(values) {
             </Field>
             <ErrorMessage name="userEmail" />
           </div>
-
           <div class="form-group">
             <label>Страна</label>
             <Field name="selectedCountry" as="select">
@@ -95,7 +91,6 @@ async function onSubmit(values) {
             </Field>
             <ErrorMessage name="selectedCountry" />
           </div>
-
           <div class="form-group">
             <label>Адрес</label>
             <Field name="userAddress" v-slot="{ field }">
@@ -103,7 +98,6 @@ async function onSubmit(values) {
             </Field>
             <ErrorMessage name="userAddress" />
           </div>
-
           <div class="form-group checkbox-group">
             <Field
               name="agreed"
@@ -113,12 +107,9 @@ async function onSubmit(values) {
             >
               <input type="checkbox" v-bind="field" id="agreement" />
             </Field>
-            <label for="agreement"
-              >Я даю согласие на обработку персональных данных</label
-            >
+            <label for="agreement">Я даю согласие на обработку персональных данных</label>
             <ErrorMessage name="agreed" />
           </div>
-
           <button class="submit-btn" type="submit">Отправить</button>
         </Form>
       </div>

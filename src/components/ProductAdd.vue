@@ -1,5 +1,5 @@
 <script setup>
-import { ref, defineProps, defineEmits } from "vue";
+import { ref, defineEmits } from "vue";
 
 const emit = defineEmits(["close", "new-product"]);
 
