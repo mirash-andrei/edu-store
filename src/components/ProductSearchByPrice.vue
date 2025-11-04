@@ -1,20 +1,3 @@
-<template>
-  <div class="search price-search">
-  <h3>Поиск по цене</h3>
-  <div class="inputs-row">
-  <label>
-    <span>От: </span>
-    <input type="text" v-model="from" placeholder="0">
-  </label>
-  <label>
-    <span>До: </span>
-    <input type="text" v-model="to" :placeholder="props.maxPrice">
-  </label>
-  <button @click="searchHandler">Найти</button>
-</div>
-</div>
-</template>
-
 <script setup>
 import { ref } from 'vue';
 
@@ -31,6 +14,23 @@ function searchHandler() {
   });
 }
 </script>
+
+<template>
+  <div class="search price-search">
+  <h3>Поиск по цене</h3>
+  <div class="inputs-row">
+  <label>
+    <span>От: </span>
+    <input type="text" v-model="from" placeholder="0">
+  </label>
+  <label>
+    <span>До: </span>
+    <input type="text" v-model="to" :placeholder="props.maxPrice">
+  </label>
+  <button @click="searchHandler">Найти</button>
+</div>
+</div>
+</template>
 
 <style scoped lang="scss">
 .price-search {
