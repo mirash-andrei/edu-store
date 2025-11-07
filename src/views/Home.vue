@@ -9,7 +9,6 @@
 </template>
 
 <script setup>
-// Home page component
 </script>
 
 <style scoped>

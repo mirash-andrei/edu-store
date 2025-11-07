@@ -37,10 +37,6 @@
 
           <button type="submit" class="btn-login">Войти</button>
         </form>
-
-        <p class="login-hint">
-          Для демонстрации используйте любые данные для входа
-        </p>
       </template>
     </div>
   </div>

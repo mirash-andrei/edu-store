@@ -1,19 +1,16 @@
 <template>
   <div class="checkout-page">
     <h1>Оформление заказа</h1>
-    
     <div v-if="cartItems.length === 0" class="empty-cart">
       <p>Ваша корзина пуста</p>
       <router-link to="/products" class="btn-primary">
         Перейти к каталогу
       </router-link>
     </div>
-    
     <div v-else class="checkout-content">
       <form @submit.prevent="handleSubmit" class="checkout-form">
         <div class="form-section">
           <h2>Данные получателя</h2>
-          
           <div class="form-group">
             <label for="name">Имя</label>
             <input
@@ -24,7 +21,6 @@
               class="form-input"
             />
           </div>
-          
           <div class="form-group">
             <label for="email">Email</label>
             <input
@@ -35,7 +31,6 @@
               class="form-input"
             />
           </div>
-          
           <div class="form-group">
             <label for="phone">Телефон</label>
             <input
@@ -46,7 +41,6 @@
               class="form-input"
             />
           </div>
-          
           <div class="form-group">
             <label for="address">Адрес доставки</label>
             <textarea
@@ -58,10 +52,8 @@
             ></textarea>
           </div>
         </div>
-        
         <div class="form-section">
           <h2>Способ оплаты</h2>
-          
           <div class="form-group">
             <label>
               <input
@@ -73,7 +65,6 @@
               Банковская карта
             </label>
           </div>
-          
           <div class="form-group">
             <label>
               <input
@@ -82,17 +73,15 @@
                 value="cash"
                 required
               />
-              Наложенный платёж
+              Оплата при получении
             </label>
           </div>
         </div>
-        
         <div class="form-actions">
           <button type="submit" class="btn-submit">Оформить заказ</button>
           <router-link to="/cart" class="btn-cancel">Вернуться в корзину</router-link>
         </div>
       </form>
-      
       <div class="order-summary">
         <h2>Сводка заказа</h2>
         <div class="summary-items">
