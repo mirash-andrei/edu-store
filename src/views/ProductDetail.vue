@@ -27,6 +27,7 @@
 import { computed, onMounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useProduct } from '../composables/useProduct'
+import { addToCart } from '../utils/cart.js'
 
 const route = useRoute()
 
@@ -59,28 +60,6 @@ onMounted(() => {
 watch(() => route.params.id, () => {
   loadProductData()
 })
-
-const addToCart = () => {
-  if (product.value) {
-    const cart = JSON.parse(localStorage.getItem('cart') || '[]')
-    const existingItem = cart.find(item => item.id === product.value.id)
-
-    if (existingItem) {
-      existingItem.quantity += 1
-    } else {
-      cart.push({
-        id: product.value.id,
-        title: product.value.title,
-        price: product.value.price,
-        image: product.value.image,
-        quantity: 1
-      })
-    }
-
-    localStorage.setItem('cart', JSON.stringify(cart))
-    alert('Товар добавлен в корзину')
-  }
-}
 </script>
 
 
