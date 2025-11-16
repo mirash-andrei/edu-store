@@ -5,36 +5,32 @@
         <h1>Привет, {{ username }}!</h1>
         <button @click="handleLogout" class="btn-logout">Выйти</button>
       </template>
-
       <template v-else>
         <h1>Вход в систему</h1>
         <form @submit.prevent="handleSubmit" class="login-form">
           <div class="form-group">
             <label for="username">Имя пользователя</label>
             <input
-              id="username"
-              v-model="username"
-              type="text"
-              required
-              class="form-input"
-              placeholder="Введите имя пользователя"
+                id="username"
+                v-model="usernameInput"
+                type="text"
+                required
+                class="form-input"
+                placeholder="Введите имя пользователя"
             />
           </div>
-
           <div class="form-group">
             <label for="password">Пароль</label>
             <input
-              id="password"
-              v-model="password"
-              type="password"
-              required
-              class="form-input"
-              placeholder="Введите пароль"
+                id="password"
+                v-model="password"
+                type="password"
+                required
+                class="form-input"
+                placeholder="Введите пароль"
             />
           </div>
-
           <div v-if="error" class="error-message">{{ error }}</div>
-
           <button type="submit" class="btn-login">Войти</button>
         </form>
       </template>
@@ -43,24 +39,32 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
-import { useAuth } from '../composables/useAuth'
+import { storeToRefs } from 'pinia'
+import { useAuthStore } from '../stores/auth'
 
 const router = useRouter()
 const route = useRoute()
-const { isAuthenticated, login, logout } = useAuth()
+const authStore = useAuthStore()
 
-const username = ref(localStorage.getItem('username') || '')
+const { isAuthenticated, username } = storeToRefs(authStore)
+const { login, logout, checkAuth, listenStorageChanges } = authStore
+
+const usernameInput = ref(username.value || '')
 const password = ref('')
 const error = ref('')
+
+onMounted(() => {
+  checkAuth()
+  listenStorageChanges()
+})
 
 const handleSubmit = () => {
   error.value = ''
 
-  if (username.value.trim() && password.value.trim()) {
-    localStorage.setItem('username', username.value)
-    login()
+  if (usernameInput.value.trim() && password.value.trim()) {
+    login(usernameInput.value)
 
     const redirect = route.query.redirect
     if (typeof redirect === 'string') {
@@ -75,7 +79,6 @@ const handleSubmit = () => {
 
 const handleLogout = () => {
   logout()
-  localStorage.removeItem('username')
 }
 </script>
 

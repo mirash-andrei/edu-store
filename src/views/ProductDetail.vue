@@ -14,7 +14,19 @@
           ⭐ {{ product.rating.rate }} ({{ product.rating.count }} отзывов)
         </div>
         <p class="description">{{ product.description }}</p>
-        <button class="btn-cart" @click="addToCart">Добавить в корзину</button>
+        <div class="quantity-box">
+          <label for="quantity">Количество:</label>
+          <input
+              id="quantity"
+              type="number"
+              v-model.number="quantity"
+              min="1"
+              class="quantity-input"
+          />
+        </div>
+        <button class="btn-cart" @click="handleAddToCart">
+          Добавить в корзину
+        </button>
         <router-link to="/products" class="btn-back">
           Вернуться к каталогу
         </router-link>
@@ -24,33 +36,44 @@
 </template>
 
 <script setup>
-import { computed, onMounted, watch } from 'vue'
+import { ref, computed, onMounted, watch, onBeforeUnmount } from 'vue'
 import { useRoute } from 'vue-router'
-import { useProduct } from '../composables/useProduct'
-import { addToCart } from '../utils/cart.js'
+import { useCartStore } from '@/stores/cart'
+import { useProductStore } from '@/stores/product'
+import { storeToRefs } from 'pinia'
 
 const route = useRoute()
+const cartStore = useCartStore()
+const productStore = useProductStore()
+
+const { addItem } = cartStore
+const { product, loading, error } = storeToRefs(productStore)
+
+const { loadProduct, clearProduct } = productStore
+
+const quantity = ref(1)
 
 const getProductId = () => {
   const id = route.params.id
-  if (typeof id === 'string') {
-    return parseInt(id, 10)
-  }
-  if (Array.isArray(id)) {
-    return parseInt(id[0], 10)
-  }
+  if (typeof id === 'string') return parseInt(id, 10)
+  if (Array.isArray(id)) return parseInt(id[0], 10)
   return 0
 }
 
 const productId = computed(() => getProductId())
 
-const { product, loading, error, loadProduct } = useProduct(productId.value)
-
 const loadProductData = () => {
   const id = productId.value
-  if (id > 0) {
-    loadProduct(id)
+  if (id > 0) loadProduct(id)
+}
+
+const handleAddToCart = () => {
+  if (!product.value) return
+  for (let i = 0; i < quantity.value; i++) {
+    addItem(product.value)
   }
+  quantity.value = 1
+  alert(`Добавлено ${quantity.value} шт. в корзину`)
 }
 
 onMounted(() => {
@@ -60,8 +83,11 @@ onMounted(() => {
 watch(() => route.params.id, () => {
   loadProductData()
 })
-</script>
 
+onBeforeUnmount(() => {
+  clearProduct()
+})
+</script>
 
 <style scoped>
 .product-detail {
@@ -127,6 +153,24 @@ watch(() => route.params.id, () => {
   line-height: 1.6;
   color: #555;
   margin-bottom: 30px;
+}
+
+.quantity-box {
+  margin-bottom: 20px;
+}
+
+.quantity-box label {
+  margin-right: 10px;
+  font-weight: 600;
+}
+
+.quantity-input {
+  width: 80px;
+  padding: 6px 8px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  text-align: center;
+  font-size: 1rem;
 }
 
 .btn-cart {

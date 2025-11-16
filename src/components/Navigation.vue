@@ -4,7 +4,6 @@
       <router-link to="/" class="nav-logo">
         Интернет-магазин
       </router-link>
-      
       <ul class="nav-menu">
         <li>
           <router-link to="/" class="nav-link">Главная</router-link>
@@ -13,12 +12,18 @@
           <router-link to="/products" class="nav-link">Каталог</router-link>
         </li>
         <li>
-          <router-link to="/cart" class="nav-link">Корзина</router-link>
+          <router-link to="/cart" class="nav-link cart-link">
+            Корзина
+            <span v-if="cartCount > 0" class="cart-info">
+              ({{ cartCount }} / ${{ total.toFixed(2) }} )
+            </span>
+          </router-link>
         </li>
         <li v-if="isAuthenticated">
           <router-link to="/add-product" class="nav-link">Добавить товар</router-link>
         </li>
         <li v-if="isAuthenticated">
+          <span class="nav-user">Добро пожаловать, {{ username }}</span>
           <button @click="handleLogout" class="nav-link nav-btn">Выйти</button>
         </li>
         <li v-else>
@@ -30,11 +35,23 @@
 </template>
 
 <script setup>
+import {computed} from "vue";
 import { useRouter } from 'vue-router'
-import { useAuth } from '../composables/useAuth'
+import { useAuthStore } from '@/stores/auth.js'
+import { useCartStore } from '@/stores/cart.js'
+import { storeToRefs } from 'pinia'
+
 
 const router = useRouter()
-const { isAuthenticated, logout } = useAuth()
+const authStore = useAuthStore()
+const cartStore = useCartStore()
+const { logout } = authStore
+const { cartItems, total } = storeToRefs(cartStore)
+const { isAuthenticated, username } = storeToRefs(authStore)
+
+const cartCount = computed(() =>
+    cartItems.value.reduce((sum, item) => sum + item.quantity, 0)
+)
 
 const handleLogout = () => {
   logout()
@@ -88,12 +105,27 @@ const handleLogout = () => {
   background: rgba(255, 255, 255, 0.2);
 }
 
+.cart-link {
+  position: relative;
+}
+
+.cart-info {
+  font-weight: bold;
+  margin-left: 4px;
+  font-size: 0.95rem;
+}
+
 .nav-btn {
-  background: none;
+  background-color: #0b3664;
   border: none;
   cursor: pointer;
   font-size: 1rem;
   font-family: inherit;
+}
+
+.nav-user {
+  display: inline-block;
+  margin-right: 8px;
 }
 
 @media (max-width: 768px) {
@@ -101,7 +133,7 @@ const handleLogout = () => {
     flex-direction: column;
     gap: 15px;
   }
-  
+
   .nav-menu {
     flex-wrap: wrap;
     justify-content: center;
