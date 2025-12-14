@@ -6,16 +6,32 @@
         <h3 class="product-title">{{ product.title }}</h3>
         <p class="product-category">{{ product.category }}</p>
         <p class="product-price">${{ product.price }}</p>
-        <button :to="`/products/${product.id}`" class="btn-details">
-          Подробнее
-        </button>
       </div>
     </router-link>
+        <button @click="handleAddToCart" class="btn-details">
+          Добавить в корзину
+        </button>
   </div>
 </template>
 
-<script setup>
-defineProps(['product'])
+<script setup lang="ts">
+import { useCartStore } from '@/stores/cart';
+import type { Product } from '@/types/graphql';
+
+const cartStore = useCartStore();
+const { addItem } = cartStore;
+
+interface Props {
+  product: Product;
+}
+
+const props = defineProps<Props>();
+
+const handleAddToCart = (): void => {
+  if (!props.product) return;
+  addItem(props.product);
+  alert(`Добавлено ${props.product.title} в корзину`);
+};
 </script>
 
 <style scoped>

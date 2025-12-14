@@ -67,39 +67,53 @@
   </div>
 </template>
 
-<script setup>
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
-import { useProducts } from '../composables/useProducts'
+<script setup lang="ts">
+import { ref, type Ref } from 'vue';
+import { useRouter } from 'vue-router';
+import { useProducts } from '../composables/useProducts';
+import type { Product, Rating } from '@/types/graphql';
 
-const router = useRouter()
-const { loadProducts } = useProducts()
+const router = useRouter();
+const { loadProducts } = useProducts();
 
-const formData = ref({
+interface FormData {
+  title: string;
+  price: number;
+  category: string;
+  description: string;
+  image: string;
+}
+
+interface LocalProduct extends Omit<Product, 'id' | 'rating'> {
+  id: number;
+  rating: Rating;
+}
+
+const formData: Ref<FormData> = ref({
   title: '',
   price: 0,
   category: '',
   description: '',
   image: ''
-})
+});
 
-const handleSubmit = () => {
-  const newProduct = {
+const handleSubmit = (): void => {
+  const newProduct: LocalProduct = {
     ...formData.value,
     id: Date.now(),
     rating: {
       rate: 0,
       count: 0
     }
-  }
+  };
 
-  const localProducts = JSON.parse(localStorage.getItem('localProducts') || '[]')
-  localProducts.push(newProduct)
-  localStorage.setItem('localProducts', JSON.stringify(localProducts))
+  const localProducts: LocalProduct[] = JSON.parse(localStorage.getItem('localProducts') || '[]');
+  localProducts.push(newProduct);
+  localStorage.setItem('localProducts', JSON.stringify(localProducts));
 
-  alert('Товар успешно добавлен!')
-  router.push('/products')
-}
+  alert('Товар успешно добавлен!');
+  router.push('/products');
+};
 </script>
 
 <style scoped>

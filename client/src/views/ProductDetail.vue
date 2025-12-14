@@ -35,58 +35,59 @@
   </div>
 </template>
 
-<script setup>
-import { ref, computed, onMounted, watch, onBeforeUnmount } from 'vue'
-import { useRoute } from 'vue-router'
-import { useCartStore } from '@/stores/cart'
-import { useProductStore } from '@/stores/product'
-import { storeToRefs } from 'pinia'
+<script setup lang="ts">
+import { ref, computed, onMounted, watch, onBeforeUnmount, type Ref, type ComputedRef } from 'vue';
+import { useRoute } from 'vue-router';
+import { useCartStore } from '@/stores/cart';
+import { useProductStore } from '@/stores/product';
+import { storeToRefs } from 'pinia';
 
-const route = useRoute()
-const cartStore = useCartStore()
-const productStore = useProductStore()
+const route = useRoute();
+const cartStore = useCartStore();
+const productStore = useProductStore();
 
-const { addItem } = cartStore
-const { product, loading, error } = storeToRefs(productStore)
+const { addItem } = cartStore;
+const { product, loading, error } = storeToRefs(productStore);
 
-const { loadProduct, clearProduct } = productStore
+const { loadProduct, clearProduct } = productStore;
 
-const quantity = ref(1)
+const quantity: Ref<number> = ref(1);
 
-const getProductId = () => {
-  const id = route.params.id
-  if (typeof id === 'string') return parseInt(id, 10)
-  if (Array.isArray(id)) return parseInt(id[0], 10)
-  return 0
-}
+const getProductId = (): number => {
+  const id = route.params.id;
+  if (typeof id === 'string') return parseInt(id, 10);
+  if (Array.isArray(id)) return parseInt(String(id[0]), 10);
+  return 0;
+};
 
-const productId = computed(() => getProductId())
+const productId: ComputedRef<number> = computed(() => getProductId());
 
-const loadProductData = () => {
-  const id = productId.value
-  if (id > 0) loadProduct(id)
-}
+const loadProductData = (): void => {
+  const id = productId.value;
+  if (id > 0) loadProduct(id);
+};
 
-const handleAddToCart = () => {
-  if (!product.value) return
-  for (let i = 0; i < quantity.value; i++) {
-    addItem(product.value)
+const handleAddToCart = (): void => {
+  if (!product.value) return;
+  const qty = quantity.value;
+  for (let i = 0; i < qty; i++) {
+    addItem(product.value);
   }
-  quantity.value = 1
-  alert(`Добавлено ${quantity.value} шт. в корзину`)
-}
+  quantity.value = 1;
+  alert(`Добавлено ${qty} шт. в корзину`);
+};
 
 onMounted(() => {
-  loadProductData()
-})
+  loadProductData();
+});
 
 watch(() => route.params.id, () => {
-  loadProductData()
-})
+  loadProductData();
+});
 
 onBeforeUnmount(() => {
-  clearProduct()
-})
+  clearProduct();
+});
 </script>
 
 <style scoped>

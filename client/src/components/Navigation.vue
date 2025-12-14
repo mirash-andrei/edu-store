@@ -34,29 +34,28 @@
   </nav>
 </template>
 
-<script setup>
-import {computed} from "vue";
-import { useRouter } from 'vue-router'
-import { useAuthStore } from '@/stores/auth.js'
-import { useCartStore } from '@/stores/cart.js'
-import { storeToRefs } from 'pinia'
+<script setup lang="ts">
+import { computed, type ComputedRef } from 'vue';
+import { useRouter } from 'vue-router';
+import { useAuthStore } from '@/stores/auth';
+import { useCartStore } from '@/stores/cart';
+import { storeToRefs } from 'pinia';
 
+const router = useRouter();
+const authStore = useAuthStore();
+const cartStore = useCartStore();
+const { logout } = authStore;
+const { cartItems, total } = storeToRefs(cartStore);
+const { isAuthenticated, username } = storeToRefs(authStore);
 
-const router = useRouter()
-const authStore = useAuthStore()
-const cartStore = useCartStore()
-const { logout } = authStore
-const { cartItems, total } = storeToRefs(cartStore)
-const { isAuthenticated, username } = storeToRefs(authStore)
+const cartCount: ComputedRef<number> = computed(() =>
+    cartItems.value.reduce((sum: number, item) => sum + item.quantity, 0)
+);
 
-const cartCount = computed(() =>
-    cartItems.value.reduce((sum, item) => sum + item.quantity, 0)
-)
-
-const handleLogout = () => {
-  logout()
-  router.push('/')
-}
+const handleLogout = (): void => {
+  logout();
+  router.push('/');
+};
 </script>
 
 <style scoped>

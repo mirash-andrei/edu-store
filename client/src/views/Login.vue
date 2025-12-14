@@ -38,48 +38,48 @@
   </div>
 </template>
 
-<script setup>
-import { ref, onMounted } from 'vue'
-import { useRouter, useRoute } from 'vue-router'
-import { storeToRefs } from 'pinia'
-import { useAuthStore } from '../stores/auth'
+<script setup lang="ts">
+import { ref, onMounted, type Ref } from 'vue';
+import { useRouter, useRoute } from 'vue-router';
+import { storeToRefs } from 'pinia';
+import { useAuthStore } from '../stores/auth';
 
-const router = useRouter()
-const route = useRoute()
-const authStore = useAuthStore()
+const router = useRouter();
+const route = useRoute();
+const authStore = useAuthStore();
 
-const { isAuthenticated, username } = storeToRefs(authStore)
-const { login, logout, checkAuth, listenStorageChanges } = authStore
+const { isAuthenticated, username } = storeToRefs(authStore);
+const { login, logout, checkAuth, listenStorageChanges } = authStore;
 
-const usernameInput = ref(username.value || '')
-const password = ref('')
-const error = ref('')
+const usernameInput: Ref<string> = ref(username.value || '');
+const password: Ref<string> = ref('');
+const error: Ref<string> = ref('');
 
 onMounted(() => {
-  checkAuth()
-  listenStorageChanges()
-})
+  checkAuth();
+  listenStorageChanges();
+});
 
-const handleSubmit = () => {
-  error.value = ''
+const handleSubmit = (): void => {
+  error.value = '';
 
   if (usernameInput.value.trim() && password.value.trim()) {
-    login(usernameInput.value)
+    login(usernameInput.value);
 
-    const redirect = route.query.redirect
+    const redirect = route.query.redirect;
     if (typeof redirect === 'string') {
-      router.push(redirect)
+      router.push(redirect);
     } else {
-      router.push('/')
+      router.push('/');
     }
   } else {
-    error.value = 'Пожалуйста, заполните все поля'
+    error.value = 'Пожалуйста, заполните все поля';
   }
-}
+};
 
-const handleLogout = () => {
-  logout()
-}
+const handleLogout = (): void => {
+  logout();
+};
 </script>
 
 <style scoped>

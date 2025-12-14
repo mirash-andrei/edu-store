@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
-import { useProducts } from '../composables/useProducts'
+import { useProducts } from '../composables/useProducts.js'
 import axios from 'axios'
 
 

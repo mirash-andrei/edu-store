@@ -14,20 +14,20 @@
   </div>
 </template>
 
-<script setup>
-import { onMounted } from 'vue'
-import { storeToRefs } from 'pinia'
-import { useProductsStore } from '../stores/products'
-import ProductItem from '../components/ProductItem.vue'
+<script setup lang="ts">
+import { onMounted } from 'vue';
+import { storeToRefs } from 'pinia';
+import { useProductsStore } from '../stores/products';
+import ProductItem from '../components/ProductItem.vue';
 
-const productsStore = useProductsStore()
+const productsStore = useProductsStore();
 
-const { products, loading, error, hasProducts } = storeToRefs(productsStore)
-const { loadProducts } = productsStore
+const { products, loading, error, hasProducts } = storeToRefs(productsStore);
+const { loadProducts } = productsStore;
 
 onMounted(() => {
-  loadProducts()
-})
+  loadProducts();
+});
 </script>
 
 
