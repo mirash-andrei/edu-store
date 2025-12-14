@@ -42,7 +42,7 @@
 import { ref, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { storeToRefs } from 'pinia'
-import { useAuthStore } from '../stores/auth'
+import { useAuthStore } from '../stores/auth.js'
 
 const router = useRouter()
 const route = useRoute()

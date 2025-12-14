@@ -8,6 +8,9 @@
       </router-link>
     </div>
     <div v-else>
+      <div class="cart-remove-all">
+        <button class="btn-remove" @click="clearCart">Очистить корзину</button>
+      </div>
       <div class="cart-items">
         <div
             v-for="item in cartItems"
@@ -43,17 +46,12 @@
 </template>
 
 <script setup>
-import { onMounted } from 'vue'
 import { storeToRefs } from 'pinia'
-import { useCartStore } from '../stores/cart'
+import { useCartStore } from '../stores/cart.js'
 
 const cartStore = useCartStore()
 const { cartItems, total, isEmpty } = storeToRefs(cartStore)
-const { loadCart, increaseQuantity, decreaseQuantity, removeItem } = cartStore
-
-onMounted(() => {
-  loadCart()
-})
+const { increaseQuantity, decreaseQuantity, removeItem, clearCart } = cartStore
 </script>
 
 <style scoped>
@@ -200,6 +198,10 @@ onMounted(() => {
 
 .btn-primary:hover {
   background: #0056b3;
+}
+
+.cart-remove-all {
+  margin-bottom: 20px;
 }
 
 @media (max-width: 768px) {

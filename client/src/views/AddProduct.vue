@@ -70,7 +70,7 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { useProducts } from '../composables/useProducts'
+import { useProducts } from '../composables/useProducts.js'
 
 const router = useRouter()
 const { loadProducts } = useProducts()

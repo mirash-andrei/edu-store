@@ -17,7 +17,7 @@
 <script setup>
 import { onMounted } from 'vue'
 import { storeToRefs } from 'pinia'
-import { useProductsStore } from '../stores/products'
+import { useProductsStore } from '../stores/products.js'
 import ProductItem from '../components/ProductItem.vue'
 
 const productsStore = useProductsStore()
