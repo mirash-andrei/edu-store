@@ -1,20 +1,18 @@
 <template>
   <div class="cart-page">
     <h1>Корзина</h1>
-    
-    <div v-if="cartItems.length === 0" class="empty-cart">
+    <div v-if="isEmpty" class="empty-cart">
       <p>Ваша корзина пуста</p>
       <router-link to="/products" class="btn-primary">
         Перейти к каталогу
       </router-link>
     </div>
-    
     <div v-else>
       <div class="cart-items">
         <div
-          v-for="item in cartItems"
-          :key="item.id"
-          class="cart-item"
+            v-for="item in cartItems"
+            :key="item.id"
+            class="cart-item"
         >
           <img :src="item.image" :alt="item.title" class="item-image" />
           <div class="item-info">
@@ -32,7 +30,6 @@
           <button @click="removeItem(item.id)" class="btn-remove">Удалить</button>
         </div>
       </div>
-      
       <div class="cart-summary">
         <div class="total">
           <strong>Итого: ${{ total.toFixed(2) }}</strong>
@@ -46,58 +43,18 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { onMounted } from 'vue'
+import { storeToRefs } from 'pinia'
+import { useCartStore } from '../stores/cart'
 
-const cartItems = ref([])
-
-const loadCart = () => {
-  const cart = localStorage.getItem('cart')
-  if (cart) {
-    cartItems.value = JSON.parse(cart)
-  }
-}
-
-const saveCart = () => {
-  localStorage.setItem('cart', JSON.stringify(cartItems.value))
-}
-
-const increaseQuantity = (id) => {
-  const item = cartItems.value.find(item => item.id === id)
-  if (item) {
-    item.quantity += 1
-    saveCart()
-  }
-}
-
-const decreaseQuantity = (id) => {
-  const item = cartItems.value.find(item => item.id === id)
-  if (item) {
-    if (item.quantity > 1) {
-      item.quantity -= 1
-    } else {
-      removeItem(id)
-      return
-    }
-    saveCart()
-  }
-}
-
-const removeItem = (id) => {
-  cartItems.value = cartItems.value.filter(item => item.id !== id)
-  saveCart()
-}
-
-const total = computed(() => {
-  return cartItems.value.reduce((sum, item) => {
-    return sum + item.price * item.quantity
-  }, 0)
-})
+const cartStore = useCartStore()
+const { cartItems, total, isEmpty } = storeToRefs(cartStore)
+const { loadCart, increaseQuantity, decreaseQuantity, removeItem } = cartStore
 
 onMounted(() => {
   loadCart()
 })
 </script>
-
 
 <style scoped>
 .cart-page {

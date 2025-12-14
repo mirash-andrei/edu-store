@@ -3,19 +3,27 @@
     <h1>Каталог товаров</h1>
     <div v-if="loading" class="loading">Загрузка товаров...</div>
     <div v-else-if="error" class="error">{{ error }}</div>
-    <div v-else-if="products.length === 0" class="empty">Товары не найдены</div>
+    <div v-else-if="!hasProducts" class="empty">Товары не найдены</div>
     <div v-else class="products-grid">
-      <ProductItem v-for="product in products" :key="product.id" :product="product"/>
+      <ProductItem
+          v-for="product in products"
+          :key="product.id"
+          :product="product"
+      />
     </div>
   </div>
 </template>
 
 <script setup>
 import { onMounted } from 'vue'
-import { useProducts } from '../composables/useProducts'
-import ProductItem from "../components/ProductItem.vue";
+import { storeToRefs } from 'pinia'
+import { useProductsStore } from '../stores/products'
+import ProductItem from '../components/ProductItem.vue'
 
-const { products, loading, error, loadProducts } = useProducts()
+const productsStore = useProductsStore()
+
+const { products, loading, error, hasProducts } = storeToRefs(productsStore)
+const { loadProducts } = productsStore
 
 onMounted(() => {
   loadProducts()
